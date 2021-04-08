@@ -64,10 +64,8 @@ const SignUp = () => {
         }
     }
 
-    console.log(process.env.REACT_APP_CLIENT_ID)
-
     const googleError = () =>
-        alert("Google Sign In was unsuccessful. Try again later")
+        window.alert("Google Sign In was unsuccessful. Try again later")
 
     const handleChange = (e) =>
         setForm({ ...form, [e.target.name]: e.target.value })
@@ -133,19 +131,21 @@ const SignUp = () => {
                     </Button>
                     <GoogleLogin
                         clientId={process.env.REACT_APP_CLIENT_ID}
-                        render={(renderProps) => (
-                            <Button
-                                className={classes.googleButton}
-                                color="primary"
-                                fullWidth
-                                onClick={renderProps.onClick}
-                                disabled={renderProps.disabled}
-                                startIcon={<Icon />}
-                                variant="contained"
-                            >
-                                Google Sign In
-                            </Button>
-                        )}
+                        render={(renderProps) => {
+                            return (
+                                <Button
+                                    className={classes.googleButton}
+                                    color="primary"
+                                    fullWidth
+                                    onClick={renderProps.onClick}
+                                    disabled={renderProps.disabled}
+                                    startIcon={<Icon />}
+                                    variant="contained"
+                                >
+                                    Google Sign In
+                                </Button>
+                            )
+                        }}
                         onSuccess={googleSuccess}
                         onFailure={googleError}
                         cookiePolicy="single_host_origin"

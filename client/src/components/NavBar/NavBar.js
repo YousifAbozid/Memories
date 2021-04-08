@@ -1,12 +1,29 @@
-import React from "react"
-import { Link } from "react-router-dom"
+import React, { useState, useEffect } from "react"
+import { Link, useHistory, useLocation } from "react-router-dom"
 import useStyles from "./styles"
 import memories from "../images/memories.png"
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core"
+import { useDispatch } from "react-redux"
+import { LOGOUT } from "../../constants/actionTypes"
 
 const NavBar = () => {
+    const [user, setUser] = useState(
+        JSON.parse(localStorage.getItem("profile"))
+    )
+    const dispatch = useDispatch()
+    const location = useLocation()
+    const history = useHistory()
     const classes = useStyles()
-    const user = null
+
+    const logout = () => {
+        dispatch({ type: LOGOUT })
+        history.push("/")
+        setUser(null)
+    }
+
+    useEffect(() => {
+        setUser(JSON.parse(localStorage.getItem("profile")))
+    }, [location])
 
     return (
         <AppBar className={classes.appBar} position="static" color="inherit">
@@ -23,40 +40,40 @@ const NavBar = () => {
                 <img
                     className={classes.image}
                     src={memories}
-                    alt="memories"
+                    alt="icon"
                     height="60"
                 />
             </div>
             <Toolbar className={classes.toolbar}>
-                {user ? (
+                {user?.result ? (
                     <div className={classes.profile}>
                         <Avatar
                             className={classes.purple}
-                            alt={user.result.name}
-                            src={user.result.imageUrl}
+                            alt={user?.result.name}
+                            src={user?.result.imageUrl}
                         >
-                            {user.result.name.charAt(0)}
+                            {user?.result.name.charAt(0)}
                         </Avatar>
-                        <Typography variant="h6" className={classes.userName}>
-                            {user.result.name}
+                        <Typography className={classes.userName} variant="h6">
+                            {user?.result.name}
                         </Typography>
                         <Button
-                            className={classes.logout}
                             variant="contained"
+                            className={classes.logout}
                             color="secondary"
+                            onClick={logout}
                         >
                             Logout
                         </Button>
                     </div>
                 ) : (
                     <Button
-                        className={classes.login}
                         component={Link}
                         to="/auth"
                         variant="contained"
                         color="primary"
                     >
-                        Login
+                        Sign In
                     </Button>
                 )}
             </Toolbar>
